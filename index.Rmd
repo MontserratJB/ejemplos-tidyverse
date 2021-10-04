@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Carga de paquetes
 
-```{r carga-librerias}
+```{r carga-librerias, message = FALSE}
 # dplyr
 library(dplyr)
 
@@ -23,7 +23,7 @@ library(ggplot2)
 
 ## Carga de datos
 
-```{r carga-datos}
+```{r carga-datos, message = FALSE}
 rios <-
   read.csv(file = 'https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/hidrologia/fdc/fdc.csv')
 
@@ -75,6 +75,56 @@ rios <-
 
 slice_head(rios, n = 10)
 ```
+
+### select
+```{r select}
+# Selección, renombramiento y conversión de columnas
+covid_columnas_seleccionadas <-
+  covid %>%
+  select(FECHA, muj_posi, hom_posi) %>%
+  rename(
+    fecha = FECHA,
+    positivos_mujeres = muj_posi,
+    positivos_hombres = hom_posi
+  ) %>%
+  mutate(fecha = as.Date(fecha, format = "%d/%m/%Y"))
+
+# Despliegue de una muestra aleatoria de los registros
+slice_sample(covid_columnas_seleccionadas, n = 10)
+```
+
+### filter
+```{r filtrado}
+# Selección, renombramiento, conversión de columnas y filtrado
+covid_filtrado <-
+  covid %>%
+  select(FECHA, nue_posi) %>%
+  rename(fecha = FECHA, positivos_nuevos = nue_posi) %>%
+  mutate(fecha = as.Date(fecha, format = "%d/%m/%Y")) %>%
+  filter(positivos_nuevos >= 3000)
+
+# Despliegue del data frame con los resultados
+covid_filtrado
+
+slice_head(covid_filtrado, n = 20)
+```
+
+### arrange
+```{r arrange}
+# Selección, renombramiento, filtrado y conversión de columnas
+covid_filtrado_ordenado_x_positivos_nuevos <-
+  covid %>%
+  select(FECHA, nue_posi) %>%
+  rename(fecha = FECHA, positivos_nuevos = nue_posi) %>%
+  mutate(fecha = as.Date(fecha, format = "%d/%m/%Y")) %>%
+  filter(positivos_nuevos >= 2500) %>%
+  arrange(desc(positivos_nuevos))
+
+# Despliegue del data frame con los resultados
+covid_filtrado_ordenado_x_positivos_nuevos
+```
+
+
 
 
 
